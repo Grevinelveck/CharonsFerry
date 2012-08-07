@@ -1,12 +1,14 @@
 package at.grevinelveck.herosdeath;
 
-import java.awt.List;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HerosDeath extends JavaPlugin {
+	public List<String> names;
+	public List<String> life;
 	public final Logger logger = Logger.getLogger("Minecraft");
 	private Events Events;
 	private DivineCommands DivineCommands;
@@ -20,7 +22,7 @@ public class HerosDeath extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		List names = (List) this.getConfig().getStringList("names");
+		List<String> names = this.getConfig().getStringList("names");
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " is online");
 		Events = new Events();

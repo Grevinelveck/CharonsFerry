@@ -1,4 +1,5 @@
 package at.grevinelveck.herosdeath;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -11,6 +12,7 @@ import org.bukkit.event.player.*;
 
 
 public class Events implements Listener {
+
 
 // Blockbreak event cancel if dead or if gravestone
 @EventHandler
