@@ -17,11 +17,11 @@ permissions:
             HerosDeath.Ghost: true
             HerosDeath.Haunt: true
     HerosDeath.Revive:
-        description: Allows you to kick a user
+        description: Allows you to revive a user
         default: op
     HerosDeath.Ghost:
-        description: Allows you to ban a user
+        description: Allows you to "die" without the messy parts.
         default: op
     HerosDeath.Haunt:
-        description: Allows you to kill a user
+        description: Allows you to tp to a player.
         default: op

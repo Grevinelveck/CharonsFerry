@@ -3,28 +3,33 @@ package at.grevinelveck.herosdeath;
 import java.awt.List;
 import java.util.logging.Logger;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HerosDeath extends JavaPlugin {
-	Logger logger = this.getLogger();
+	public final Logger logger = Logger.getLogger("Minecraft");
 	private Events Events;
 	private DivineCommands DivineCommands;
-	List names = (List) this.getConfig().getStringList("names");
+
 
 	@Override
 	public void onDisable() {
-		System.out.println("Disabling HerosDeath");
+		PluginDescriptionFile pdfFile = this.getDescription();
+		this.logger.info(pdfFile.getName() + " is offline");
 	}
 
 	@Override
 	public void onEnable() {
-		System.out.println("Enabling HerosDeath");
+		List names = (List) this.getConfig().getStringList("names");
+		PluginDescriptionFile pdfFile = this.getDescription();
+		this.logger.info(pdfFile.getName() + " is online");
 		Events = new Events();
 		DivineCommands =new DivineCommands();
 		getServer().getPluginManager().registerEvents(Events, this);
 		getCommand("Revive").setExecutor(DivineCommands);
 		getCommand("Ghost").setExecutor(DivineCommands);
 		getCommand("Haunt").setExecutor(DivineCommands);
+		
         }
     }
 
