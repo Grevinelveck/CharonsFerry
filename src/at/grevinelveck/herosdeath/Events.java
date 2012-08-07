@@ -10,9 +10,8 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 
-
 public class Events implements Listener {
-	
+	HerosDeath hd = new.HerosDeath();
 
 
 // Blockbreak event cancel if dead or if gravestone

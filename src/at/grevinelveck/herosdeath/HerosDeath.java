@@ -10,8 +10,8 @@ public class HerosDeath extends JavaPlugin {
 	public List<String> names;
 	public List<String> life;
 	public final Logger logger = Logger.getLogger("Minecraft");
-	private Events Events;
-	private DivineCommands DivineCommands;
+	private Events checkEvents;
+	private DivineCommands dCommands;
 
 public void loadConfiguration() {
     getConfig().options().copyDefaults(true);
@@ -32,12 +32,12 @@ public void loadConfiguration() {
 		loadConfiguration();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " is online");
-		Events = new Events();
-		DivineCommands =new DivineCommands();
+		checkEvents = new Events();
+		dCommands =new DivineCommands();
 		getServer().getPluginManager().registerEvents(Events, this);
-		getCommand("Revive").setExecutor(DivineCommands);
-		getCommand("Ghost").setExecutor(DivineCommands);
-		getCommand("Haunt").setExecutor(DivineCommands);
+		getCommand("Revive").setExecutor(dCommands);
+		getCommand("Ghost").setExecutor(dCommands);
+		getCommand("Haunt").setExecutor(dCommands);
 		
         }
     }
