@@ -7,7 +7,9 @@ commands:
    Revive:
       description: This command brings a player back to life
       usage: /Revive [player]
+   Ghost:
       usage: /Ghost [player]
+   Haunt:
       usage: /Haunt [player]
 permissions:
     HerosDeath.*:
