@@ -13,6 +13,13 @@ public class HerosDeath extends JavaPlugin {
 	private Events Events;
 	private DivineCommands DivineCommands;
 
+public void loadConfiguration() {
+    getConfig().options().copyDefaults(true);
+    saveConfig();
+
+}
+
+
 
 	@Override
 	public void onDisable() {
@@ -22,7 +29,7 @@ public class HerosDeath extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		List<String> names = this.getConfig().getStringList("names");
+		loadConfiguration();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " is online");
 		Events = new Events();

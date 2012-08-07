@@ -12,6 +12,7 @@ import org.bukkit.event.player.*;
 
 
 public class Events implements Listener {
+	
 
 
 // Blockbreak event cancel if dead or if gravestone
@@ -83,6 +84,9 @@ public void noTouchEver(PlayerInteractEntityEvent event) {
 
 @EventHandler
 public void onWelcome(PlayerJoinEvent event) {
+	Player player = event.getPlayer();
+	getConfig();
+	config.getStringList("names").contains(player.getName());
 }
 
 // cancel pickup of items
