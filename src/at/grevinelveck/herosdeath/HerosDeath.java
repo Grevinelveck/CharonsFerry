@@ -23,7 +23,8 @@ public class HerosDeath extends JavaPlugin {
 		DivineCommands =new DivineCommands();
 		getServer().getPluginManager().registerEvents(Events, this);
 		getCommand("Revive").setExecutor(DivineCommands);
-
+		getCommand("Ghost").setExecutor(DivineCommands);
+		getCommand("Haunt").setExecutor(DivineCommands);
         }
     }
 
