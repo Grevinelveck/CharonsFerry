@@ -9,6 +9,7 @@ public class HerosDeath extends JavaPlugin {
 	public final Logger logger = Logger.getLogger("Minecraft");
 	private Events checkEvents;
 	private DivineCommands dCommands;
+	public static HerosDeath plugin;
 
 public void loadConfiguration() {
     getConfig().options().copyDefaults(true);
@@ -26,6 +27,7 @@ public void loadConfiguration() {
 
 	@Override
 	public void onEnable() {
+		plugin=this;
 		loadConfiguration();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " is online");

@@ -14,12 +14,12 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 
 public class Events implements Listener {
-	public HerosDeath plugin;
 
 	// Blockbreak event cancel if dead or if gravestone
 	@EventHandler
 	public void breakDeath(BlockBreakEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -29,7 +29,7 @@ public class Events implements Listener {
 	// cancel block place if dead
 	@EventHandler
 	public void placeDeath(BlockPlaceEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -41,7 +41,7 @@ public class Events implements Listener {
 	public void noBreathing(EntityDamageByBlockEvent event) {
 		if (event.getEntity() instanceof Player) {
 			String player = ((Player) event.getEntity()).getName();
-			if (plugin.getConfig().contains(player + ", dead"))
+			if (HerosDeath.plugin.getConfig().contains(player + ", dead"))
 				;
 			{
 				event.setCancelled(true);
@@ -54,7 +54,7 @@ public class Events implements Listener {
 	public void noPain(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player) {
 			String player = ((Player) event.getEntity()).getName();
-			if (plugin.getConfig().contains(player + ", dead"))
+			if (HerosDeath.plugin.getConfig().contains(player + ", dead"))
 				;
 			{
 				event.setCancelled(true);
@@ -67,7 +67,7 @@ public class Events implements Listener {
 	public void noFollow(EntityTargetEvent event) {
 		if (event.getEntity() instanceof Player) {
 			String player = ((Player) event.getEntity()).getName();
-			if (plugin.getConfig().contains(player + ", dead"))
+			if (HerosDeath.plugin.getConfig().contains(player + ", dead"))
 				;
 			{
 				event.setCancelled(true);
@@ -97,7 +97,7 @@ public class Events implements Listener {
 	// Prevent dead from dropping items
 	@EventHandler
 	public void noTrace(PlayerDropItemEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -107,7 +107,7 @@ public class Events implements Listener {
 	// prevent dead from interacting
 	@EventHandler
 	public void noTouch(PlayerInteractEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -117,7 +117,7 @@ public class Events implements Listener {
 	// prevent interacting with entities
 	@EventHandler
 	public void noTouchEver(PlayerInteractEntityEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -126,26 +126,26 @@ public class Events implements Listener {
 
 	@EventHandler
 	public void onWelcome(PlayerJoinEvent event) {
-		if (!plugin.getConfig().contains(event.getPlayer().getName()))
+		if (!HerosDeath.plugin.getConfig().contains(event.getPlayer().getName()))
 			;
 		{
-			plugin.getConfig().getStringList("names")
+			HerosDeath.plugin.getConfig().getStringList("names")
 					.add(event.getPlayer().getName() + ", alive");
-			plugin.saveConfig();
+			HerosDeath.plugin.saveConfig();
 		}
-		if (plugin.getConfig().contains(
+		if (HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		event.getPlayer().sendMessage(ChatColor.GOLD + "You have been revived");
-		plugin.getConfig().getStringList("names")
+		HerosDeath.plugin.getConfig().getStringList("names")
 				.add(event.getPlayer().getName() + ", alive");
-		plugin.saveConfig();
+		HerosDeath.plugin.saveConfig();
 	}
 
 	// cancel pickup of items
 	@EventHandler
 	public void noGet(PlayerPickupItemEvent event) {
-		if (plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -154,22 +154,22 @@ public class Events implements Listener {
 
 	@EventHandler
 	public void onGhostHood(PlayerRespawnEvent event) {
-		if (plugin.getConfig().contains(
+		if (HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		{
 			event.getPlayer().sendMessage(
 					ChatColor.GOLD + "You have been revived");
-			plugin.getConfig().getStringList("names")
+			HerosDeath.plugin.getConfig().getStringList("names")
 					.add(event.getPlayer().getName() + ", alive");
-			plugin.saveConfig();
+			HerosDeath.plugin.saveConfig();
 		}
-		if (!plugin.getConfig().contains(
+		if (!HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		{
 			{
-				plugin.getConfig().getStringList("names")
+				HerosDeath.plugin.getConfig().getStringList("names")
 						.add(event.getPlayer().getName() + ", dead");
 			}
 		}
@@ -196,12 +196,12 @@ public class Events implements Listener {
 				return;
 			}
 			// Check if player exist in the database
-			if (!plugin.getConfig().contains(event.getLine(1))) {
+			if (!HerosDeath.plugin.getConfig().contains(event.getLine(1))) {
 				event.getPlayer().sendMessage(
 						ChatColor.RED + "Player not found");
 				return;
 			}
-			if (plugin.getConfig().contains(event.getLine(1) + ", alive"))
+			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", alive"))
 				;
 			{
 				Player player = event.getPlayer();
@@ -218,7 +218,7 @@ public class Events implements Listener {
 								ChatColor.GOLD
 										+ "The gods have accepted your sacrifice and will grant you a future boon");
 			}
-			if (plugin.getConfig().contains(event.getLine(1) + ", dead"))
+			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", dead"))
 				;
 			{
 				Player player = event.getPlayer();
@@ -236,12 +236,12 @@ public class Events implements Listener {
 										+ "The gods have accepted your sacrifice and will breath new life into your fallen comrade.");
 				Bukkit.getServer().getPlayer(event.getLine(1))
 						.sendMessage(ChatColor.GOLD + "You have been revived");
-				plugin.getConfig().getStringList("names")
+				HerosDeath.plugin.getConfig().getStringList("names")
 						.add(event.getLine(0) + ", alive");
-				plugin.saveConfig();
+				HerosDeath.plugin.saveConfig();
 
 			}
-			if (plugin.getConfig().contains(event.getLine(1) + ", revive")) {
+			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", revive")) {
 				event.getPlayer().sendMessage(
 						ChatColor.GOLD + "The gods frown apon greedy fools");
 
