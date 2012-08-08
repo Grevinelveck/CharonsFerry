@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -132,25 +133,21 @@ public class Events implements Listener {
 	}
 
 	@EventHandler
-	public void onWelcome(PlayerJoinEvent event) {
-		String player = event.getPlayer().getName();
-		if (HerosDeath.plugin.getConfig().contains("player." + player)) {
-			HerosDeath.plugin.getConfig().set("player." + player + ".alive",
-					true);
-			HerosDeath.plugin.getConfig().set("player." + player + ".revive",
-					false);
-			HerosDeath.plugin.saveConfig();
-		}
-		if (HerosDeath.plugin.getConfig().contains(
-				event.getPlayer().getName() + ", revive"))
-			;
-		event.getPlayer().sendMessage(ChatColor.GOLD + "You have been revived");
-		List<String> myList = HerosDeath.plugin.getConfig().getStringList(
-				"names");
-		myList.add(player + ", alive");
-		HerosDeath.plugin.getConfig().set("names", myList);
-		HerosDeath.plugin.saveConfig();
-	}
+    public void onWelcome(PlayerJoinEvent event) {
+            String player = event.getPlayer().getName();
+            FileConfiguration config = HerosDeath.plugin.getConfig();
+            if (config.contains("player." + player)) {
+                    config.set("player." + player + ".alive", true);
+                    config.set("player." + player + ".revive", false);
+                    HerosDeath.plugin.saveConfig();
+            }
+            if ((config.getBoolean("player." + player + ".revive", true)) && (config.getBoolean("player." + player + ".alive", false))) {
+                    config.set("player." + player + ".alive", true);
+                    config.set("player." + player + ".revive", false);
+                    HerosDeath.plugin.saveConfig();
+            }
+    }
+
 
 	// cancel pickup of items
 	@EventHandler
