@@ -1,5 +1,7 @@
 package at.grevinelveck.herosdeath;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,8 +20,9 @@ public class Events implements Listener {
 	// Blockbreak event cancel if dead or if gravestone
 	@EventHandler
 	public void breakDeath(BlockBreakEvent event) {
-		
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -29,7 +32,8 @@ public class Events implements Listener {
 	// cancel block place if dead
 	@EventHandler
 	public void placeDeath(BlockPlaceEvent event) {
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -97,7 +101,8 @@ public class Events implements Listener {
 	// Prevent dead from dropping items
 	@EventHandler
 	public void noTrace(PlayerDropItemEvent event) {
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -107,7 +112,8 @@ public class Events implements Listener {
 	// prevent dead from interacting
 	@EventHandler
 	public void noTouch(PlayerInteractEvent event) {
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -117,7 +123,8 @@ public class Events implements Listener {
 	// prevent interacting with entities
 	@EventHandler
 	public void noTouchEver(PlayerInteractEntityEvent event) {
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -126,26 +133,31 @@ public class Events implements Listener {
 
 	@EventHandler
 	public void onWelcome(PlayerJoinEvent event) {
-		if (!HerosDeath.plugin.getConfig().contains(event.getPlayer().getName()))
-			;
-		{
-			HerosDeath.plugin.getConfig().getStringList("names")
-					.add(event.getPlayer().getName() + ", alive");
+		String player = event.getPlayer().getName();
+		if (!HerosDeath.plugin.getConfig()
+				.contains(event.getPlayer().getName())) {
+			List<String> myList = HerosDeath.plugin.getConfig().getStringList(
+					"names");
+			myList.add(player + ", alive");
+			HerosDeath.plugin.getConfig().set("names", myList);
 			HerosDeath.plugin.saveConfig();
 		}
 		if (HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		event.getPlayer().sendMessage(ChatColor.GOLD + "You have been revived");
-		HerosDeath.plugin.getConfig().getStringList("names")
-				.add(event.getPlayer().getName() + ", alive");
+		List<String> myList = HerosDeath.plugin.getConfig().getStringList(
+				"names");
+		myList.add(player + ", alive");
+		HerosDeath.plugin.getConfig().set("names", myList);
 		HerosDeath.plugin.saveConfig();
 	}
 
 	// cancel pickup of items
 	@EventHandler
 	public void noGet(PlayerPickupItemEvent event) {
-		if (HerosDeath.plugin.getConfig().contains(event.getPlayer().getName() + ", dead"))
+		if (HerosDeath.plugin.getConfig().contains(
+				event.getPlayer().getName() + ", dead"))
 			;
 		{
 			event.setCancelled(true);
@@ -154,25 +166,32 @@ public class Events implements Listener {
 
 	@EventHandler
 	public void onGhostHood(PlayerRespawnEvent event) {
+		String player = event.getPlayer().getName();
 		if (HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		{
 			event.getPlayer().sendMessage(
 					ChatColor.GOLD + "You have been revived");
-			HerosDeath.plugin.getConfig().getStringList("names")
-					.add(event.getPlayer().getName() + ", alive");
-			HerosDeath.plugin.saveConfig();
+			List<String> myList = HerosDeath.plugin.getConfig().getStringList(
+					"names");
+			myList.add(player + ", alive");
+			HerosDeath.plugin.getConfig().set("names", myList);
+
 		}
 		if (!HerosDeath.plugin.getConfig().contains(
 				event.getPlayer().getName() + ", revive"))
 			;
 		{
 			{
-				HerosDeath.plugin.getConfig().getStringList("names")
-						.add(event.getPlayer().getName() + ", dead");
+				List<String> myList = HerosDeath.plugin.getConfig()
+						.getStringList("names");
+				myList.add(player + ", dead");
+				HerosDeath.plugin.getConfig().set("names", myList);
 			}
+
 		}
+		HerosDeath.plugin.saveConfig();
 	}
 
 	@EventHandler
@@ -201,7 +220,8 @@ public class Events implements Listener {
 						ChatColor.RED + "Player not found");
 				return;
 			}
-			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", alive"))
+			if (HerosDeath.plugin.getConfig().contains(
+					event.getLine(1) + ", alive"))
 				;
 			{
 				Player player = event.getPlayer();
@@ -218,7 +238,8 @@ public class Events implements Listener {
 								ChatColor.GOLD
 										+ "The gods have accepted your sacrifice and will grant you a future boon");
 			}
-			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", dead"))
+			if (HerosDeath.plugin.getConfig().contains(
+					event.getLine(1) + ", dead"))
 				;
 			{
 				Player player = event.getPlayer();
@@ -241,7 +262,8 @@ public class Events implements Listener {
 				HerosDeath.plugin.saveConfig();
 
 			}
-			if (HerosDeath.plugin.getConfig().contains(event.getLine(1) + ", revive")) {
+			if (HerosDeath.plugin.getConfig().contains(
+					event.getLine(1) + ", revive")) {
 				event.getPlayer().sendMessage(
 						ChatColor.GOLD + "The gods frown apon greedy fools");
 
