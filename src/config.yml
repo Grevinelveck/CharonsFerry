@@ -1,4 +1,4 @@
 players:
       Grevinelveck:
         alive: true
-        revive: true
+        revive: false
