@@ -1,3 +1,4 @@
-#This file will be used to store people who will be revived upon death's names.#
-names:
-   Grevinelveck, alive
+players:
+      Grevinelveck:
+        alive: true
+        revive: true

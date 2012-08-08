@@ -134,12 +134,11 @@ public class Events implements Listener {
 	@EventHandler
 	public void onWelcome(PlayerJoinEvent event) {
 		String player = event.getPlayer().getName();
-		if (!HerosDeath.plugin.getConfig()
-				.contains(event.getPlayer().getName())) {
-			List<String> myList = HerosDeath.plugin.getConfig().getStringList(
-					"names");
-			myList.add(player + ", alive");
-			HerosDeath.plugin.getConfig().set("names", myList);
+		if (HerosDeath.plugin.getConfig().contains("player." + player)) {
+			HerosDeath.plugin.getConfig().set("player." + player + ".alive",
+					true);
+			HerosDeath.plugin.getConfig().set("player." + player + ".revive",
+					false);
 			HerosDeath.plugin.saveConfig();
 		}
 		if (HerosDeath.plugin.getConfig().contains(
