@@ -2,7 +2,6 @@ package at.grevinelveck.herosdeath;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.block.*;
@@ -15,9 +14,9 @@ import org.bukkit.event.player.*;
 public class Events implements Listener {
 	FileConfiguration config = HerosDeath.plugin.getConfig();
 
-	// Blockbreak event cancel if dead or if gravestone
 	@EventHandler
 	public void breakDeath(BlockBreakEvent event) {
+
 		final String player = event.getPlayer().getName();
 		System.out.println(player);
 		if (config.getBoolean("player." + player + ".alive") == false) {
@@ -25,7 +24,6 @@ public class Events implements Listener {
 		}
 	}
 
-	// cancel block place if dead
 	@EventHandler
 	public void placeDeath(BlockPlaceEvent event) {
 		final String player = event.getPlayer().getName();
@@ -35,37 +33,60 @@ public class Events implements Listener {
 		}
 	}
 
-	// cancel entity damage if dead
+	// broken
 	@EventHandler
-	public void noBreathing(EntityDamageByBlockEvent event) {
-		String player = ((Player) event.getEntity()).getName();
-		System.out.println(player);
-		if (config.getBoolean("player." + player + ".alive") == false) {
+	public void noDamage(EntityDamageByBlockEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player target = (Player) event.getEntity();
+			String player = target.getName();
+			System.out.println(player);
+			if (config.getBoolean("player." + player + ".alive") == false) {
+				event.setCancelled(true);
+			}
 		}
 	}
 
-	// cancel more damage
+	// broken
 	@EventHandler
-	public void noPain(EntityDamageByEntityEvent event) {
-		String player = ((Player) event.getEntity()).getName();
-		System.out.println(player);
-		if (config.getBoolean("player." + player + ".alive") == false) {
-			event.setCancelled(true);
+	public void noPain(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player target = (Player) event.getEntity();
+			String player = target.getName();
+			System.out.println(player);
+			if (config.getBoolean("player." + player + ".alive") == false) {
+				event.setCancelled(true);
+			}
 		}
 	}
 
-	// Prevent mobs from chasing dead players
 	@EventHandler
-	public void noFollow(EntityTargetEvent event) {
-		String player = ((Player) event.getEntity()).getName();
-		System.out.println(player);
-		if (config.getBoolean("player." + player + ".alive") == false) {
+	public void noGain(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Player) {
+			Player target = (Player) event.getDamager();
+			String player = target.getName();
+			System.out.println(player);
+			if (config.getBoolean("player." + player + ".alive") == false) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	// Broken
+	@EventHandler
+	public void noFollow(EntityTargetLivingEntityEvent event) {
+		if (event.getTarget() instanceof Player)
 			;
+		{
+			Player target = (Player) event.getTarget();
+			String player = target.getName();
+			System.out.println(player);
+			if (config.getBoolean("player." + player + ".alive") == false) {
+				event.setCancelled(true);
+
+			}
 		}
 	}
 
-	// On death event
-	// Get playername to be called and used appropreatly
 	@EventHandler
 	public void whenDead(PlayerDeathEvent event) {
 		Player p = event.getEntity();
@@ -73,9 +94,9 @@ public class Events implements Listener {
 		Block block = p.getWorld().getBlockAt(p.getLocation());
 		if (!block.isEmpty()
 				&& !(block.getType().getId() == Material.SNOW.getId())) {
-			block.setTypeId(63);
 			return;
 		}
+		block.setTypeId(63);
 		Sign s = (Sign) block.getState();
 		s.setLine(0, "R.I.P");
 		s.setLine(1, "");
@@ -84,7 +105,6 @@ public class Events implements Listener {
 		s.update();
 	}
 
-	// Prevent dead from dropping items
 	@EventHandler
 	public void noTrace(PlayerDropItemEvent event) {
 		final String player = event.getPlayer().getName();
@@ -94,7 +114,6 @@ public class Events implements Listener {
 		}
 	}
 
-	// prevent dead from interacting
 	@EventHandler
 	public void noTouch(PlayerInteractEvent event) {
 		final String player = event.getPlayer().getName();
@@ -104,7 +123,6 @@ public class Events implements Listener {
 		}
 	}
 
-	// prevent interacting with entities
 	@EventHandler
 	public void noTouchEver(PlayerInteractEntityEvent event) {
 		final String player = event.getPlayer().getName();
@@ -131,7 +149,6 @@ public class Events implements Listener {
 		}
 	}
 
-	// cancel pickup of items
 	@EventHandler
 	public void noGet(PlayerPickupItemEvent event) {
 		final String player = event.getPlayer().getName();
@@ -164,80 +181,84 @@ public class Events implements Listener {
 
 	}
 
+	// broken
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
-		final Player player = event.getPlayer();
+		final String player = event.getPlayer().getName();
+		final Player placer = event.getPlayer();
+		final String player2 = event.getLine(1);
 		System.out.println(player);
 		if (event.getLine(0).equalsIgnoreCase("revive")) {
 			Block blockunder = (event.getBlock().getWorld().getBlockAt(event
 					.getBlock().getX(), event.getBlock().getY() - 1, event
 					.getBlock().getZ()));
+			System.out.println("Gotblockunder");
 			Block block = (event.getBlock().getWorld().getBlockAt(event
-					.getBlock().getX(), event.getBlock().getY() - 1, event
+					.getBlock().getX(), event.getBlock().getY() + 1, event
 					.getBlock().getZ()));
-			Location lock = (Location) blockunder;
-			Location lock2 = (Location) block;
+			System.out.println("Gotblockunder");
 
-			System.out
-					.println((blockunder.getType() != Material.GOLD_BLOCK && blockunder
-							.getType() != Material.IRON_BLOCK));
+			System.out.println(blockunder.getType() != Material.GOLD_BLOCK
+					|| blockunder.getType() != Material.IRON_BLOCK
+					|| blockunder.getType() != Material.DIAMOND_BLOCK);
 			if (blockunder.getType() != Material.GOLD_BLOCK
 					|| blockunder.getType() != Material.IRON_BLOCK
 					|| blockunder.getType() != Material.DIAMOND_BLOCK) {
+				System.out.println("Is the placed block a gravestone");
 				return;
-			}
-			// Check if player exist in the database
-			final String player2 = event.getLine(1);
-			System.out.println(player2);
-			if (config.contains("player." + player2)) {
-				player.sendMessage(ChatColor.RED + "Player not found");
-				return;
-			}
-			if ((config.getBoolean("player." + player + ".revive") == true)
-					&& (config.getBoolean("player." + player + ".alive") == true)) {
-				;
-				// Remove blocks
-				player.getPlayer().getWorld().getBlockAt(lock2)
-						.setType(Material.AIR);
-				player.getPlayer().getWorld().getBlockAt(lock)
-						.setType(Material.AIR);
-				player.getPlayer().getWorld().strikeLightning(lock2);
-				player.getPlayer().getWorld().getBlockAt(lock2)
-						.setType(Material.AIR);
-				event.getPlayer()
-						.sendMessage(
-								ChatColor.GOLD
-										+ "The gods have accepted your sacrifice and will grant you a future boon");
-			}
-			if ((config.getBoolean("player." + player + ".revive") == true)
-					&& (config.getBoolean("player." + player + ".alive") == false)) {
+			}else{
+				System.out.println("check if line1 is a players name");
+				System.out.println(player2);
+				if (config.contains("player." + player2)) {
+					placer.sendMessage(ChatColor.RED + "Player not found");
+					return;
+				}
+				System.out
+						.println("Check if player is alive and has no revive");
+				if ((config.getBoolean("player." + player + ".revive") == false)
+						&& (config.getBoolean("player." + player + ".alive") == true)) {
+					blockunder.setType(Material.AIR);
+					block.setType(Material.WATER);
+					block.setType(Material.AIR);
+					event.getPlayer()
+							.sendMessage(
+									ChatColor.GOLD
+											+ "The gods have accepted your sacrifice and will grant you a future boon");
+				}
+				System.out.println("If player is dead with no revive");
+				if ((config.getBoolean("player." + player + ".revive") == false)
+						&& (config.getBoolean("player." + player + ".alive") == false)) {
 
-				// Remove blocks
-				player.getPlayer().getWorld().getBlockAt(lock2)
-						.setType(Material.AIR);
-				player.getPlayer().getWorld().getBlockAt(lock)
-						.setType(Material.AIR);
-				player.getPlayer().getWorld().strikeLightning(lock2);
-				player.getPlayer().getWorld().getBlockAt(lock2)
-						.setType(Material.AIR);
-				event.getPlayer()
-						.sendMessage(
-								ChatColor.GOLD
-										+ "The gods have accepted your sacrifice and will breath new life into your fallen comrade.");
-				Bukkit.getServer().getPlayer(event.getLine(1))
-						.sendMessage(ChatColor.GOLD + "You have been revived");
-				config.set("player." + player + ".alive", true);
-				config.set("player." + player + ".revive", false);
-				HerosDeath.plugin.saveConfig();
+					blockunder.setType(Material.AIR);
+					block.setType(Material.WATER);
+					block.setType(Material.AIR);
+					event.getPlayer()
+							.sendMessage(
+									ChatColor.GOLD
+											+ "The gods have accepted your sacrifice and will revive your fallen comrade");
+					Bukkit.getServer()
+							.getPlayer(event.getLine(1))
+							.sendMessage(
+									ChatColor.GOLD + "You have been revived");
+					config.set("player." + player + ".alive", true);
+					config.set("player." + player + ".revive", false);
+					HerosDeath.plugin.saveConfig();
 
-			}
-			if ((config.getBoolean("player." + player + ".revive") == true)
-					&& (config.getBoolean("player." + player + ".alive") == true)) {
-				event.getPlayer().sendMessage(
-						ChatColor.RED + "The gods frown apon greedy fools");
+				}
+				System.out.println("if player is alive and primed to revive");
+				if ((config.getBoolean("player." + player + ".revive") == true)
+						&& (config.getBoolean("player." + player + ".alive") == true)) {
+					event.getPlayer().sendMessage(
+							ChatColor.RED + "The gods frown apon greedy fools");
+
+				}
+				System.out.println("1");
 
 			}
+		System.out.println("2");
+			}
 
-		}
 	}
 }
+
+
