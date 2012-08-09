@@ -1,18 +1,13 @@
 package at.grevinelveck.herosdeath;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
@@ -23,9 +18,9 @@ public class Events implements Listener {
 	// Blockbreak event cancel if dead or if gravestone
 	@EventHandler
 	public void breakDeath(BlockBreakEvent event) {
-		String player=event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
@@ -33,76 +28,78 @@ public class Events implements Listener {
 	// cancel block place if dead
 	@EventHandler
 	public void placeDeath(BlockPlaceEvent event) {
-		String player=event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
+
 	// cancel entity damage if dead
 	@EventHandler
 	public void noBreathing(EntityDamageByBlockEvent event) {
-		String player=((OfflinePlayer) event).getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
-			event.setCancelled(true);
+		String player = ((Player) event.getEntity()).getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 		}
 	}
 
 	// cancel more damage
 	@EventHandler
 	public void noPain(EntityDamageByEntityEvent event) {
-		String player=((OfflinePlayer) event).getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
-			event.setCancelled(true);
-		}
-	}}
-
-	// Prevent mobs from chasing dead players
-	@EventHandler
-	public void noFollow(EntityTargetEvent event) {
-		String player=((OfflinePlayer) event).getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		String player = ((Player) event.getEntity()).getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
 
+	// Prevent mobs from chasing dead players
+	@EventHandler
+	public void noFollow(EntityTargetEvent event) {
+		String player = ((Player) event.getEntity()).getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
+			;
+		}
+	}
+
 	// On death event
+	// Get playername to be called and used appropreatly
 	@EventHandler
 	public void whenDead(PlayerDeathEvent event) {
-		Player player = event.getEntity();
-		Block block = player.getWorld().getBlockAt(player.getLocation());
+		Player p = event.getEntity();
+		String player = p.getName();
+		Block block = p.getWorld().getBlockAt(p.getLocation());
 		if (!block.isEmpty()
 				&& !(block.getType().getId() == Material.SNOW.getId())) {
 			block.setTypeId(63);
-			Sign s = (Sign) block.getState();
-			s.setLine(0, "R.I.P");
-			s.setLine(1, "");
-			s.setLine(2, "Here Lies");
-			s.setLine(3, player.getName());
-			s.update();
 			return;
-
 		}
+		Sign s = (Sign) block.getState();
+		s.setLine(0, "R.I.P");
+		s.setLine(1, "");
+		s.setLine(2, "Here Lies");
+		s.setLine(3, player);
+		s.update();
 	}
 
 	// Prevent dead from dropping items
 	@EventHandler
 	public void noTrace(PlayerDropItemEvent event) {
-		String player = event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
+
 	// prevent dead from interacting
 	@EventHandler
 	public void noTouch(PlayerInteractEvent event) {
-		String player = event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
@@ -110,23 +107,24 @@ public class Events implements Listener {
 	// prevent interacting with entities
 	@EventHandler
 	public void noTouchEver(PlayerInteractEntityEvent event) {
-		String player = event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onWelcome(PlayerJoinEvent event) {
-		String player = event.getPlayer().getName();
-		if (config.contains("player." + player)) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (!config.contains("player." + player)) {
 			config.addDefault("player." + player + ".alive", true);
 			config.addDefault("player." + player + ".revive", false);
 			HerosDeath.plugin.saveConfig();
 		}
-		if ((config.getBoolean("player." + player + ".revive", true))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		if ((config.getBoolean("player." + player + ".revive") == true)
+				&& (config.getBoolean("player." + player + ".alive") == false)) {
 			config.set("player." + player + ".alive", true);
 			config.set("player." + player + ".revive", false);
 			HerosDeath.plugin.saveConfig();
@@ -136,40 +134,40 @@ public class Events implements Listener {
 	// cancel pickup of items
 	@EventHandler
 	public void noGet(PlayerPickupItemEvent event) {
-		String player = event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", false))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".alive") == false) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onGhostHood(PlayerRespawnEvent event) {
-		String player = event.getPlayer().getName();
-		if ((config.getBoolean("player." + player + ".revive", true))
-				&& (config.getBoolean("player." + player + ".alive", true))) {
+		final String player = event.getPlayer().getName();
+		System.out.println(player);
+		if (config.getBoolean("player." + player + ".revive") == true) {
 			config.set("player." + player + ".alive", true);
 			config.set("player." + player + ".revive", false);
 			HerosDeath.plugin.saveConfig();
 			event.getPlayer().sendMessage(
 					ChatColor.GOLD + "You have been revived");
 		}
-		if ((config.getBoolean("player." + player + ".revive", false))
-				&& (config.getBoolean("player." + player + ".alive", true))) {
+		if (config.getBoolean("player." + player + ".revive") == false) {
 			config.set("player." + player + ".alive", false);
 			config.set("player." + player + ".revive", false);
 			HerosDeath.plugin.saveConfig();
 			event.getPlayer()
 					.sendMessage(
 							ChatColor.RED
-									+ "You are dead.  A freind or admin will have to revive you.");
+									+ "You are dead.  A friend will have to revive you.");
 		}
 
 	}
 
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
+		System.out.println(player);
 		if (event.getLine(0).equalsIgnoreCase("revive")) {
 			Block blockunder = (event.getBlock().getWorld().getBlockAt(event
 					.getBlock().getX(), event.getBlock().getY() - 1, event
@@ -189,15 +187,15 @@ public class Events implements Listener {
 				return;
 			}
 			// Check if player exist in the database
-			if (config.getString("player." + event.getLine(1)) != null{
-					player.sendMessage(Player not found)
-						ChatColor.RED + "Player not found");
+			final String player2 = event.getLine(1);
+			System.out.println(player2);
+			if (config.contains("player." + player2)) {
+				player.sendMessage(ChatColor.RED + "Player not found");
 				return;
 			}
-			if (HerosDeath.plugin.getConfig().contains(
-					event.getLine(1) + ", alive"))
+			if ((config.getBoolean("player." + player + ".revive") == true)
+					&& (config.getBoolean("player." + player + ".alive") == true)) {
 				;
-			{
 				// Remove blocks
 				player.getPlayer().getWorld().getBlockAt(lock2)
 						.setType(Material.AIR);
@@ -211,10 +209,8 @@ public class Events implements Listener {
 								ChatColor.GOLD
 										+ "The gods have accepted your sacrifice and will grant you a future boon");
 			}
-			if (HerosDeath.plugin.getConfig().contains(
-					event.getLine(1) + ", dead"))
-				;
-			{
+			if ((config.getBoolean("player." + player + ".revive") == true)
+					&& (config.getBoolean("player." + player + ".alive") == false)) {
 
 				// Remove blocks
 				player.getPlayer().getWorld().getBlockAt(lock2)
@@ -226,19 +222,19 @@ public class Events implements Listener {
 						.setType(Material.AIR);
 				event.getPlayer()
 						.sendMessage(
-								ChatColor.RED
+								ChatColor.GOLD
 										+ "The gods have accepted your sacrifice and will breath new life into your fallen comrade.");
 				Bukkit.getServer().getPlayer(event.getLine(1))
 						.sendMessage(ChatColor.GOLD + "You have been revived");
-				HerosDeath.plugin.getConfig().getStringList("names")
-						.add(event.getLine(0) + ", alive");
+				config.set("player." + player + ".alive", true);
+				config.set("player." + player + ".revive", false);
 				HerosDeath.plugin.saveConfig();
 
 			}
-			if (HerosDeath.plugin.getConfig().contains(
-					event.getLine(1) + ", revive")) {
+			if ((config.getBoolean("player." + player + ".revive") == true)
+					&& (config.getBoolean("player." + player + ".alive") == true)) {
 				event.getPlayer().sendMessage(
-						ChatColor.GOLD + "The gods frown apon greedy fools");
+						ChatColor.RED + "The gods frown apon greedy fools");
 
 			}
 
