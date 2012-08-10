@@ -4,11 +4,14 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import at.grevinelveck.charonsferry.functions.Rebirth;
+
 
 public class CharonsFerry extends JavaPlugin {
 	public final Logger logger = Logger.getLogger("Minecraft");
 	private Events checkEvents;
 	private DivineCommands dCommands;
+	private Rebirth giasLife;
 	public static CharonsFerry plugin;
 
 public void loadConfiguration() {
@@ -33,9 +36,11 @@ public void loadConfiguration() {
 		this.logger.info(pdfFile.getName() + " is online");
 		checkEvents = new Events();
 		dCommands =new DivineCommands();
+		giasLife =new Rebirth();
 		getServer().getPluginManager().registerEvents(checkEvents, this);
-		getCommand("Ferry").setExecutor(dCommands);
+		getCommand("CharonsFerry").setExecutor(dCommands);
 		getCommand("CF").setExecutor(dCommands);
+		getCommand("ReviveAll").setExecutor(giasLife);
 		
         }
     }

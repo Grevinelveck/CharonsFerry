@@ -4,9 +4,15 @@ version: "1.2"
 
 
 commands:
-   Ferry:
+   CharonsFerry:
       description: This command brings the ferryman to your beck and call
-      usage: /Ferry [Command] [player]
+      usage: /CharonsFerry [Command] [player]
+   CF:
+      description: This command brings the ferryman to your beck and call
+      usage: /CF [Command] [player]
+   ReviveAll:
+      description: This revives all players on the server
+      usage: /CF [Command] [player]
 permissions:
     CharonsFerry.*:
         description: Gives controll over life and death
@@ -16,6 +22,7 @@ permissions:
             CharonsFerry.Haunt: true
             CharonsFerry.Poltergeist: true
             CharonsFerry.Boon: true
+            CharonsFerry.ReviveAll: true
     CharonsFerry.Revive:
         description: Allows you to revive a user
         default: op
@@ -30,4 +37,7 @@ permissions:
         default: op
     CheronsFerry.Boon:
         descriptoin: Allows a user to see if he he will revive apon death
+        default: op
+    CheronsFerry.ReviveAll:
+        descriptoin: Allows a user revive all players.
         default: op
