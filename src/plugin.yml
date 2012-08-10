@@ -1,29 +1,33 @@
-name: "HerosDeath"
-main: "at.grevinelveck.herosdeath.HerosDeath"
+name: "CharonsFerry"
+main: "at.grevinelveck.charonsferry.CharonsFerry"
 version: "1.2"
 
 
 commands:
-   Revive:
-      description: This command brings a player back to life
-      usage: /Revive [player]
-   Ghost:
-      usage: /Ghost [player]
-   Haunt:
-      usage: /Haunt [player]
+   Ferry:
+      description: This command brings the ferryman to your beck and call
+      usage: /Ferry [Command] [player]
 permissions:
-    HerosDeath.*:
+    CharonsFerry.*:
         description: Gives controll over life and death
         children:
-            HerosDeath.Revive: true
-            HerosDeath.Ghost: true
-            HerosDeath.Haunt: true
-    HerosDeath.Revive:
+            CharonsFerry.Revive: true
+            CharonsFerry.Ghost: true
+            CharonsFerry.Haunt: true
+            CharonsFerry.Poltergeist: true
+            CharonsFerry.Boon: true
+    CharonsFerry.Revive:
         description: Allows you to revive a user
         default: op
-    HerosDeath.Ghost:
+    CharonsFerry.Ghost:
         description: Allows you to "die" without the messy parts.
         default: op
-    HerosDeath.Haunt:
+    CharonsFerry.Haunt:
         description: Allows you to tp to a player.
+        default: op
+    CheronsFerry.Poltergeist:
+        descriptoin: Allows a ghost to be interact with its inviroment.
+        default: op
+    CheronsFerry.Boon:
+        descriptoin: Allows a user to see if he he will revive apon death
         default: op

@@ -1,14 +1,15 @@
-package at.grevinelveck.herosdeath;
+package at.grevinelveck.charonsferry;
 
 import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class HerosDeath extends JavaPlugin {
+
+public class CharonsFerry extends JavaPlugin {
 	public final Logger logger = Logger.getLogger("Minecraft");
 	private Events checkEvents;
 	private DivineCommands dCommands;
-	public static HerosDeath plugin;
+	public static CharonsFerry plugin;
 
 public void loadConfiguration() {
     getConfig().options().copyDefaults(true);
@@ -33,9 +34,8 @@ public void loadConfiguration() {
 		checkEvents = new Events();
 		dCommands =new DivineCommands();
 		getServer().getPluginManager().registerEvents(checkEvents, this);
-		getCommand("Revive").setExecutor(dCommands);
-		getCommand("Ghost").setExecutor(dCommands);
-		getCommand("Haunt").setExecutor(dCommands);
+		getCommand("Ferry").setExecutor(dCommands);
+		getCommand("CF").setExecutor(dCommands);
 		
         }
     }
