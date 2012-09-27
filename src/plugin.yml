@@ -1,6 +1,6 @@
 name: "CharonsFerry"
 main: "at.grevinelveck.charonsferry.CharonsFerry"
-version: "1.2"
+version: "1.5"
 
 
 commands:
@@ -20,8 +20,10 @@ permissions:
             CharonsFerry.Revive: true
             CharonsFerry.Ghost: true
             CharonsFerry.Haunt: true
+            CharonsFerry.Haunt.Killer: true
             CharonsFerry.Poltergeist: true
             CharonsFerry.Boon: true
+            CharonsFerry.Boon.Other: true
             CharonsFerry.ReviveAll: true
     CharonsFerry.Revive:
         description: Allows you to revive a user
@@ -30,13 +32,19 @@ permissions:
         description: Allows you to "die" without the messy parts.
         default: op
     CharonsFerry.Haunt:
-        description: Allows you to tp to a player.
+        description: Allows you to tp to a player while dead.
+        default: op
+    CharonsFerry.Haunt.Killer:
+        description: Only allows player to tp to killer while dead.
         default: op
     CheronsFerry.Poltergeist:
-        descriptoin: Allows a ghost to be interact with its inviroment.
+        descriptoin: Allows a ghost to be interact with its enviroment.
         default: op
     CheronsFerry.Boon:
-        descriptoin: Allows a user to see if he he will revive apon death
+        descriptoin: Allows a user to see if he he will revive upon death
+        default: op
+    CheronsFerry.Boon.Other:
+        descriptoin: Allows a user to see if others are dead or will revive upon death
         default: op
     CheronsFerry.ReviveAll:
         descriptoin: Allows a user revive all players.

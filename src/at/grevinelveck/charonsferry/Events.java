@@ -2,6 +2,7 @@ package at.grevinelveck.charonsferry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,21 +12,24 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import at.grevinelveck.charonsferry.functions.Ressurection;
 
 public class Events implements Listener {
 	FileConfiguration config = CharonsFerry.plugin.getConfig();
-	Ressurection grantLife = new Ressurection(null, null);
-	
+	Ressurection grantLife = new Ressurection();
+	private String Gravestone;
+
 	@EventHandler
-	public void noHunger(FoodLevelChangeEvent event){
+	public void noHunger(FoodLevelChangeEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player target = (Player) event.getEntity();
 			String player = target.getName();
 			if (config.getBoolean("player." + player + ".alive") == false) {
 				event.setCancelled(true);
-		}
+			}
 		}
 	}
 
@@ -37,6 +41,7 @@ public class Events implements Listener {
 		if ((config.getBoolean("player." + player + ".alive") == false)
 				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
+			event.getPlayer().sendMessage("You are dead.");
 		}
 	}
 
@@ -47,10 +52,11 @@ public class Events implements Listener {
 		if ((config.getBoolean("player." + player + ".alive") == false)
 				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
+			event.getPlayer().sendMessage("You are dead.");
 		}
 	}
 
-	// broken
+
 	@EventHandler
 	public void noDamage(EntityDamageByBlockEvent event) {
 		if (event.getEntity() instanceof Player) {
@@ -62,7 +68,7 @@ public class Events implements Listener {
 		}
 	}
 
-	// broken
+
 	@EventHandler
 	public void noPain(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player) {
@@ -81,12 +87,13 @@ public class Events implements Listener {
 			String player = target.getName();
 			if (config.getBoolean("player." + player + ".alive") == false) {
 				event.setCancelled(true);
+				target.sendMessage("You are dead.");
 			}
 		}
 	}
 
-	// Broken
-	@EventHandler
+	// Broken possibly only with monster apoc due to different targeting method?
+	@EventHandler()
 	public void noFollow(EntityTargetLivingEntityEvent event) {
 		if (event.getTarget() instanceof Player) {
 			Player target = (Player) event.getTarget();
@@ -123,6 +130,7 @@ public class Events implements Listener {
 		if ((config.getBoolean("player." + player + ".alive") == false)
 				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
+			event.getPlayer().sendMessage("You are dead.");
 		}
 	}
 
@@ -133,6 +141,7 @@ public class Events implements Listener {
 		if ((config.getBoolean("player." + player + ".alive") == false)
 				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
+			event.getPlayer().sendMessage("You are dead.");
 		}
 	}
 
@@ -143,6 +152,7 @@ public class Events implements Listener {
 		if ((config.getBoolean("player." + player + ".alive") == false)
 				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
+			event.getPlayer().sendMessage("You are dead.");
 		}
 	}
 
@@ -153,6 +163,7 @@ public class Events implements Listener {
 		if (!config.contains("player." + player)) {
 			config.addDefault("player." + player + ".alive", true);
 			config.addDefault("player." + player + ".revive", false);
+			config.set("player." + player + ".block", "Null");
 			CharonsFerry.plugin.saveConfig();
 		}
 
@@ -164,52 +175,74 @@ public class Events implements Listener {
 		}
 		if ((config.getBoolean("player." + player + ".revive") == false)
 				&& (config.getBoolean("player." + player + ".alive") == false)) {
-			final Player target=event.getPlayer();
-			config.set("player." + player + ".alive", true);
-			config.set("player." + player + ".revive", false);
-			CharonsFerry.plugin.saveConfig();
-			for (Player players : Bukkit.getOnlinePlayers())
-		    {
-		    players.hidePlayer(target);
-		    }
+			final Player target = event.getPlayer();
+			for (Player players : Bukkit.getOnlinePlayers()) {
+				players.hidePlayer(target);
+			}
+		
+		}
+		if ((config.getBoolean("player." + player + ".revive") == false)
+				&& (config.getBoolean("player." + player + ".alive") == true)) {
+		    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
+		    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
 		}
 	}
 
 	@EventHandler
 	public void noGet(PlayerPickupItemEvent event) {
 		final String player = event.getPlayer().getName();
-
-		if (config.getBoolean("player." + player + ".alive") == false) {
+		final Player God = event.getPlayer();
+		if ((config.getBoolean("player." + player + ".alive") == false)
+				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
 			event.setCancelled(true);
 		}
 	}
-
+	
+	@EventHandler
+	public void ghostlyTraces(PlayerMoveEvent event) {
+		final Player God = event.getPlayer();
+		final String player = event.getPlayer().getName();
+		if ((config.getBoolean("player." + player + ".alive") == false)
+				&& (!God.hasPermission("CharonsFerry.Poltergeist"))) {
+			int temp=config.getInt("Minutes");
+			int ticks=temp*1200;
+			
+	God.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, ticks, 1));
+	God.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, ticks, 1));
+	God.getWorld().playEffect(God.getLocation(), Effect.SMOKE, 2);
+		}
+	}
+	
 	@EventHandler
 	public void onGhostHood(PlayerRespawnEvent event) {
 		final String player = event.getPlayer().getName();
+		final Player target = event.getPlayer();
 
 		if (config.getBoolean("player." + player + ".revive") == false) {
-			final Player target=event.getPlayer();
 			config.set("player." + player + ".alive", false);
 			config.set("player." + player + ".revive", false);
 			CharonsFerry.plugin.saveConfig();
-			for (Player players : Bukkit.getOnlinePlayers())
-		    {
-		    players.hidePlayer(target);
-		    }
 			event.getPlayer()
-					.sendMessage(
-							ChatColor.RED
-									+ "You are dead.  A friend will have to revive you.");
+			.sendMessage(
+					ChatColor.RED
+							+ "You are a ghost.  A friend will have to revive you.  A global revive happens every "
+							+ config.getInt("Minutes") + " Minutes");
+			for (Player players : Bukkit.getOnlinePlayers()) {
+				players.hidePlayer(target);
+			}
 		}
 		if (config.getBoolean("player." + player + ".revive") == true) {
-			config.set("player." + player + ".alive", true);
+			config.set("player." + player + ".alive", false);
 			config.set("player." + player + ".revive", false);
 			CharonsFerry.plugin.saveConfig();
-			event.getPlayer().sendMessage(
-					ChatColor.GOLD + "You have been revived");
-		}
+			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(CharonsFerry.plugin,
+					new Runnable() {
+						public void run() {
+							grantLife.life(player, target);
+						}
+					}, 80L);
 
+		}
 	}
 
 	// broken
@@ -217,7 +250,7 @@ public class Events implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		final Player placer = event.getPlayer();
 		final String player = event.getLine(1);
-		final Player target=Bukkit.getPlayer(player);
+		final Player target = Bukkit.getPlayer(player);
 
 		if (event.getLine(0).equalsIgnoreCase("revive")) {
 			Block blockunder = (event.getBlock().getWorld().getBlockAt(event
@@ -228,10 +261,12 @@ public class Events implements Listener {
 					.getBlock().getZ()));
 
 			System.out.println(blockunder.getType() != Material.GOLD_BLOCK
+					|| blockunder.getType() != Material.LAPIS_BLOCK
 					|| blockunder.getType() != Material.IRON_BLOCK
 					|| blockunder.getType() != Material.DIAMOND_BLOCK);
 
 			if (blockunder.getType() != Material.GOLD_BLOCK
+					&& blockunder.getType() != Material.LAPIS_BLOCK
 					&& blockunder.getType() != Material.IRON_BLOCK
 					&& blockunder.getType() != Material.DIAMOND_BLOCK) {
 				return;
@@ -244,12 +279,24 @@ public class Events implements Listener {
 				if ((config.getBoolean("player." + player + ".revive") == true)
 						&& (config.getBoolean("player." + player + ".alive") == true)) {
 					event.getPlayer().sendMessage(
-							ChatColor.RED + "The gods frown apon greedy fools");
+							ChatColor.RED + "The gods frown upon greedy fools");
 
 				}
 
 				if ((config.getBoolean("player." + player + ".revive") == false)
 						&& (config.getBoolean("player." + player + ".alive") == true)) {
+					if (blockunder.getType()==Material.LAPIS_BLOCK){
+						Gravestone="Lapis";
+					}
+					if (blockunder.getType()==Material.IRON_BLOCK){
+						Gravestone="Iron";
+					}
+					if (blockunder.getType()==Material.GOLD_BLOCK){
+						Gravestone="Gold";
+					}
+					if (blockunder.getType()==Material.DIAMOND_BLOCK){
+						Gravestone="Diamond";
+					}
 					block.setType(Material.AIR);
 					blockunder.setType(Material.FIRE);
 					Location loc2 = event.getPlayer().getLocation();
@@ -258,12 +305,24 @@ public class Events implements Listener {
 							.sendMessage(
 									ChatColor.GOLD
 											+ "The gods have accepted your sacrifice and will grant you a future boon");
-					config.set("player." + player + ".alive", true);
 					config.set("player." + player + ".revive", true);
+					config.set("player." + player + ".block", Gravestone);
 					CharonsFerry.plugin.saveConfig();
 				}
 				if ((config.getBoolean("player." + player + ".revive") == false)
 						&& (config.getBoolean("player." + player + ".alive") == false)) {
+					if (blockunder.getType()==Material.LAPIS_BLOCK){
+						Gravestone="Lapis";
+					}
+					if (blockunder.getType()==Material.IRON_BLOCK){
+						Gravestone="Iron";
+					}
+					if (blockunder.getType()==Material.GOLD_BLOCK){
+						Gravestone="Gold";
+					}
+					if (blockunder.getType()==Material.DIAMOND_BLOCK){
+						Gravestone="Diamond";
+					}
 					block.setType(Material.AIR);
 					blockunder.setType(Material.FIRE);
 					Location loc = event.getPlayer().getLocation();
@@ -272,6 +331,8 @@ public class Events implements Listener {
 							.sendMessage(
 									ChatColor.GOLD
 											+ "The gods have accepted your sacrifice and will revive your fallen comrade");
+					config.set("player." + player + ".block", Gravestone);
+					CharonsFerry.plugin.saveConfig();
 					grantLife.life(player, target);
 				}
 

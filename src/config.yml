@@ -1,1 +1,5 @@
-
+Minutes: 3
+player:
+  Grevinelveck:
+    alive: true
+    revive: false
