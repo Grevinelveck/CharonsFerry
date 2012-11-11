@@ -3,3 +3,5 @@ player:
   Grevinelveck:
     alive: true
     revive: false
+    block: Null
+    time: 0

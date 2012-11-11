@@ -1,6 +1,6 @@
 name: "CharonsFerry"
 main: "at.grevinelveck.charonsferry.CharonsFerry"
-version: "1.5"
+version: "1.9.1"
 
 
 commands:

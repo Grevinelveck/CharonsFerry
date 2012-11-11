@@ -12,7 +12,7 @@ import at.grevinelveck.charonsferry.functions.*;
 
 public class DivineCommands implements CommandExecutor {
 	FileConfiguration config = CharonsFerry.plugin.getConfig();
-	Ressurection grantLife = new Ressurection();
+	Revive grantLife = new Revive();
 	Ghost takeLife = new Ghost();
 	Haunt stalkLife = new Haunt();
 
@@ -91,10 +91,10 @@ public class DivineCommands implements CommandExecutor {
 			}
 			case 2: {
 				if (!config.contains("player." + args[1])) {
-						sender.sendMessage(ChatColor.RED
-								+ "That player does not exist.");
-						return false;
-					}
+					sender.sendMessage(ChatColor.RED
+							+ "That player does not exist.");
+					return false;
+				}
 				if (Bukkit.getPlayerExact(args[1]) == null) {
 					sender.sendMessage(ChatColor.RED
 							+ "That player is not online.");
@@ -102,7 +102,6 @@ public class DivineCommands implements CommandExecutor {
 				}
 				Player target2 = Bukkit.getPlayer(args[1]);
 				String player2 = target2.getName();
-
 
 				if (args[0].equalsIgnoreCase("Revive")) {
 					if (!sender.hasPermission("CharonsFerry.Revive")) {
@@ -168,8 +167,7 @@ public class DivineCommands implements CommandExecutor {
 						return false;
 					}
 					if (config.getBoolean("player." + player + ".alive") == true) {
-						sender.sendMessage(ChatColor.RED
-								+ "You are not dead");
+						sender.sendMessage(ChatColor.RED + "You are not dead");
 						return false;
 					}
 					if ((!sender.hasPermission("CharonsFerry.Haunt"))

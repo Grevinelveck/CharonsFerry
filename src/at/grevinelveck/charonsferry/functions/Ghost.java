@@ -12,6 +12,7 @@ public class Ghost{
 
 	public void death(String player,Player target){
 	config.set("player." + player + ".alive", false);
+	config.set("player." + player + ".time", +config.getInt("Minutes"));
 	CharonsFerry.plugin.saveConfig();
 	for (Player players : Bukkit.getOnlinePlayers())
     {

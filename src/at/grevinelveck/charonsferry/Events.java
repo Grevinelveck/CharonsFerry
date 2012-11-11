@@ -15,11 +15,11 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import at.grevinelveck.charonsferry.functions.Ressurection;
+import at.grevinelveck.charonsferry.functions.Revive;
 
 public class Events implements Listener {
 	FileConfiguration config = CharonsFerry.plugin.getConfig();
-	Ressurection grantLife = new Ressurection();
+	Revive grantLife = new Revive();
 	private String Gravestone;
 
 	@EventHandler
@@ -164,6 +164,7 @@ public class Events implements Listener {
 			config.addDefault("player." + player + ".alive", true);
 			config.addDefault("player." + player + ".revive", false);
 			config.set("player." + player + ".block", "Null");
+			config.set("player." + player + ".time", 0);
 			CharonsFerry.plugin.saveConfig();
 		}
 
@@ -220,7 +221,7 @@ public class Events implements Listener {
 
 		if (config.getBoolean("player." + player + ".revive") == false) {
 			config.set("player." + player + ".alive", false);
-			config.set("player." + player + ".revive", false);
+			config.set("player." + player + ".time", +config.getInt("Minutes"));
 			CharonsFerry.plugin.saveConfig();
 			event.getPlayer()
 			.sendMessage(
@@ -249,7 +250,7 @@ public class Events implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		final Player placer = event.getPlayer();
-		final String player = event.getLine(1);
+		final String player = event.getLine(1)+event.getLine(2);
 		final Player target = Bukkit.getPlayer(player);
 
 		if (event.getLine(0).equalsIgnoreCase("revive")) {
@@ -297,6 +298,9 @@ public class Events implements Listener {
 					if (blockunder.getType()==Material.DIAMOND_BLOCK){
 						Gravestone="Diamond";
 					}
+					if (blockunder.getType()==Material.EMERALD_BLOCK){
+						Gravestone="Emerald";
+					}
 					block.setType(Material.AIR);
 					blockunder.setType(Material.FIRE);
 					Location loc2 = event.getPlayer().getLocation();
@@ -322,6 +326,9 @@ public class Events implements Listener {
 					}
 					if (blockunder.getType()==Material.DIAMOND_BLOCK){
 						Gravestone="Diamond";
+					}
+					if (blockunder.getType()==Material.EMERALD_BLOCK){
+						Gravestone="EMERALD";
 					}
 					block.setType(Material.AIR);
 					blockunder.setType(Material.FIRE);
